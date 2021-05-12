@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable no-unused-vars */
 const books = require('./books')
 const { nanoid } = require('nanoid')
@@ -63,18 +64,112 @@ const postBookHandler = (request, h) => {
 
 // ===============================================================================================
 
-const getAllBookHandler = (request, h) => (
-  {
+const getAllBookHandler = (request, h) => {
+  const { name, reading, finished } = request.query
+  if (name !== undefined) {
+    // console.log('there is a ' + name)
+    // console.log('debugging ' + books[0].name)
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((obj) => obj.name.toLowerCase().includes(name.toLowerCase()))
+          .map((obj) => ({
+            id: obj.id,
+            name: obj.name,
+            publisher: obj.publisher
+          }))
+      }
+    })
+    return response
+  }
+
+  if (reading === '1') {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((obj) => obj.reading === true)
+          .map((obj) => ({
+            id: obj.id,
+            name: obj.name,
+            publisher: obj.publisher
+          }))
+      }
+    })
+    return response
+  } else if (reading === '0') {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((obj) => obj.reading === false)
+          .map((obj) => ({
+            id: obj.id,
+            name: obj.name,
+            publisher: obj.publisher
+          }))
+      }
+    })
+    return response
+  }
+
+  if (finished === '1') {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((obj) => obj.finished === true)
+          .map((obj) => ({
+            id: obj.id,
+            name: obj.name,
+            publisher: obj.publisher
+          }))
+      }
+    })
+    return response
+  } else if (finished === '0') {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((obj) => obj.finished === false)
+          .map((obj) => ({
+            id: obj.id,
+            name: obj.name,
+            publisher: obj.publisher
+          }))
+      }
+    })
+    return response
+  }
+
+  const response = h.response({
     status: 'success',
     data: {
-      books: books.map((obj) => ({
-        id: obj.id,
-        name: obj.name,
-        publisher: obj.publisher
-      }))
+      books: books
+        .map((obj) => ({
+          id: obj.id,
+          name: obj.name,
+          publisher: obj.publisher
+        }))
     }
-  }
-)
+  })
+  return response
+}
+
+// const getAllBookHandler = (request, h) => (
+//   {
+//     status: 'success',
+//     data: {
+//       books: books.map((obj) => ({
+//         id: obj.id,
+//         name: obj.name,
+//         publisher: obj.publisher
+//       }))
+//     }
+//   }
+// )
 
 // ===============================================================================================
 
