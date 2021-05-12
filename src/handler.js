@@ -19,9 +19,6 @@ const postBookHandler = (request, h) => {
   const newBook = {
     id, name, year, author, summary, publisher, pageCount, readPage, reading, finished, insertedAt, updatedAt
   }
-  // pushes item into array
-  books.push(newBook)
-  const isSuccess = books.filter((book) => book.id === id).length > 0
   // no name found
   if (newBook.name === undefined) {
     const response = h.response({
@@ -40,6 +37,9 @@ const postBookHandler = (request, h) => {
     response.code(400)
     return response
   }
+  // pushes item into array
+  books.push(newBook)
+  const isSuccess = books.filter((book) => book.id === id).length > 0
   // on success
   if (isSuccess) {
     const response = h.response({
@@ -63,7 +63,7 @@ const postBookHandler = (request, h) => {
 
 // ===============================================================================================
 
-const getAllBookHandler = () => (
+const getAllBookHandler = (request, h) => (
   {
     status: 'success',
     data: {
